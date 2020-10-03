@@ -1,14 +1,11 @@
 import setuptools
 
-from tfc_client import __version__
-
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="tfc_client",
-    version=__version__,
+    version="0.7.3.dev",
     author="Alexandre Dath for ADEO",
     author_email="alex.dath@gmail.com",
     license="MIT",
