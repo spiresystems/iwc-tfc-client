@@ -342,6 +342,14 @@ class TFCWorkspace(TFCObject, Paginable, Modifiable, Creatable, Assignable):
         return super().create(object_type, url_prefix=url_prefix, **kwargs)
 
     @property
+    def current_state(self, include_outputs: bool = True) -> 'TFCStateVersion':
+        params = "?include=outputs" if include_outputs else ""
+        resp = self.client._api.get(
+            path=f"workspaces/{self.id}/current-state-version{params}"
+        )
+        return self.client.factory(resp.data)
+
+    @property
     def runs(self) -> Generator[TFCRun, None, None]:
         return self.get_list("runs")
 
@@ -419,6 +427,14 @@ class TFCOauthClient(TFCObject):
 
 class TFCStateVersion(TFCObject):
     type = "state-versions"
+
+    @property
+    def outputs(self):
+        return {v.name: v for v in self.relationships['outputs']}
+
+
+class TFCStateVersionOutput(TFCObject):
+    type = "state-version-outputs"
 
 
 class TFCConfigurationVersion(TFCObject):
