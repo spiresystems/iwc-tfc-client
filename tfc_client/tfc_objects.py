@@ -353,6 +353,16 @@ class TFCWorkspace(TFCObject, Paginable, Modifiable, Creatable, Assignable):
     def runs(self) -> Generator[TFCRun, None, None]:
         return self.get_list("runs")
 
+    def add_key(self, key_id) -> bool:
+        return self.client._api.patch(
+            path=f'workspaces/{self.id}/relationships/ssh-key',
+            json={
+                'data': {
+                    'attributes': {'id': key_id},
+                    'type': 'workspaces',
+                }
+            })
+
     def do_lock(self) -> bool:
         if self.client._api.post(path=f"workspaces/{self.id}/actions/lock"):
             self.refresh()
